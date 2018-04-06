@@ -1,5 +1,3 @@
-// Solution by Arka Talukdar
-
 #include <stdio.h>
 #include <time.h>
 #include <math.h>
@@ -9,7 +7,7 @@
 #define UPPER_BOUND 10000000000
 #define MODE 1  // 0 to forsake CL-ARG
 #define PRINT 0 // 1 to print primes.
-#define PAGE 2500 // 
+#define PAGE 2500
 
 
 #define SetBit(A,k)     ( A[(k/32)] |= (1 << (k%32)) )
@@ -73,7 +71,7 @@ int removeComposites(long baseIndex, int limit , int* arr, int* rootPrimes, int 
         }
         for( i = 0; i< limit; i++){
             if(!TestBit(arr,i)){
-                count+=1;// can add insertion here
+                count+=1;
                printf(" %ld \n", (i+baseIndex));  
              }
         }
@@ -87,8 +85,8 @@ int main(int argc, char *argv[]){
     if (argc > 1 && MODE == 1)
         limit = (long)pow(10,atoi(argv[1]));
     else
-        limit = UPPER_BOUND; // (long)pow(10,UPPER_BOUND); /*setting upper bound */
-    //printf("%ld \n", limit);
+        limit = UPPER_BOUND;
+
     int p, id , root  = 0;
     double wtime;
     MPI_Init(NULL, NULL);
@@ -128,19 +126,7 @@ int main(int argc, char *argv[]){
         SetBit(arr,4);       
     }
     SetBit(arr,0);
-    // printf("%d\n", rootCount);
-    // printf("%ld %ld %ld\n" , part_size, n_hi, n_lo);
-    
-    //for(i =0; i< rootCount; i ++)
-    //printf("%d\n" , rootPrimes[i]);
-    
-    /*
-    for(base = n_lo;  base < n_hi; base+=PAGE)
-    {
-        d += removeComposites( base, MIN(n_hi-base,PAGE) , (arr+base), rootPrimes, c);
-        printf("%ld   %d  %d\n" , base, d, TestBit(arr,base));
-    }
-    */
+
    long j = 0, count = 0;
    long start, dprime;
     
@@ -150,48 +136,15 @@ int main(int argc, char *argv[]){
         if(n_lo == 0) start = ((long)rootPrimes[i])*((long)rootPrimes[i]);
         else start  = MAX(   ( (long)ceil( ((double)n_lo) / rootPrimes[i]) * rootPrimes[i])   ,  ((long)rootPrimes[i])*((long)rootPrimes[i])  ) -  n_lo;  
 
-        // // else start = (long)ceil( ((double)n_lo) / rootPrimes[i]) * rootPrimes[i] - n_lo;
-        
         if( start % 2 == 0 && rootPrimes[i] > 2)
             start += rootPrimes[i];
         if(rootPrimes[i] == 2)
             dprime = 2;
 
-        // // if(rootPrimes[i] == 179)
-        // //     printf("%ld start for 179 %d",start,p);
-        //printf("%d   %ld %ld \n" , rootPrimes[i], start,part_size);
         for(j = start ; j < part_size; j += dprime )
                 SetBit(arr,j);
     }
 
-
-    // int *rcounts, *dsply;
-    // long nh, nl;
-    // long tc = 0;    
-    
-    // if (id == root) {
-    //     rcounts = (int *)calloc(p, sizeof(int));
-    //     dsply = (int *)calloc(p, sizeof(int));
-    //     for(i=0; i < p; i ++){
-    //         if (i != p - 1)
-    //             nh = (long)(limit / p) * (i + 1);
-    //         else
-    //             nh = limit;
-    //         nl = (long)(limit / p) * i;
-    //         dsply[i] = tc;
-    //         rcounts[i] = (int)ceil((nh - nl)/32);
-    //         tc += rcounts[i];
-    //         // printf("helo %d\n", rcounts[i]);
-    //     }
-    // }
-
-    // int* all_range;
-    // if(id == root){
-    //     all_range = (int*) calloc((limit/32), sizeof(int));
-    // }
-    // MPI_Gatherv(arr, (part_size/32), MPI_INT, all_range, rcounts, dsply, MPI_INT, root, MPI_COMM_WORLD);
-    // printf("GREAT SUCCESS\n");
-    
     int* all_range;
     if(id == root){
         all_range = (int*) calloc((limit/32), sizeof(int));
